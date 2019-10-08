@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 /**
  *
- * @author Sergio
+ * @author Alejandro Rodriguez
  */
 public class User {
     private String id;
