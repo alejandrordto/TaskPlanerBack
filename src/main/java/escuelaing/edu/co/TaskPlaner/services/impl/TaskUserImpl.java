@@ -63,12 +63,13 @@ public class TaskUserImpl implements TaskService{
     }
 
     @Override
-    public Task updateTask(String id, User responsible, String status, Date dueDate) {
+    public Task updateTask(String id, User responsible, String status, Date dueDate, String text) {
         Task task = getTaskById(id);
         task.setId(id);
         task.setResponsible(responsible);
         task.setStatus(status);
         task.setDueDate(dueDate);
+        task.setText(text);
         taskMap.replace(task.getId(),task);
         return task;
     }

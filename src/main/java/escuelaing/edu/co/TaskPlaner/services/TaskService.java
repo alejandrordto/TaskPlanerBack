@@ -25,5 +25,5 @@ public interface TaskService {
 
     public void removeTask(String taskId);
 
-    public Task updateTask(String id, User responsible, String status, Date dueDate);
+    public Task updateTask(String id, User responsible, String status, Date dueDate, String text);
 }

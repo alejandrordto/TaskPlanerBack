@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author Alejandro Rodriguez
  */
 @RestController
-@RequestMapping(value = "/TaskPlanner")
+@RequestMapping(value = "/Task")
 public class TaskController {
     @Autowired
     TaskService taskService;
@@ -66,7 +66,7 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<?> updateTask(@RequestBody Task task) {
         try {
-            return new ResponseEntity<>(taskService.updateTask(task.getId(),task.getResponsible(),task.getStatus(),task.getDueDate()), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(taskService.updateTask(task.getId(),task.getResponsible(),task.getStatus(),task.getDueDate(),task.getText()), HttpStatus.ACCEPTED);
         } catch (Exception ex) {
 
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);

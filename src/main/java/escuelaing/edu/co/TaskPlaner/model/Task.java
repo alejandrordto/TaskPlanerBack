@@ -16,15 +16,17 @@ public class Task {
     private User responsible;
     private String status;
     private Date dueDate;
+    private String text;
 
     public Task() {
     }
 
-    public Task(String id, User responsible, String status, Date dueDate) {
+    public Task(String id, User responsible, String status, Date dueDate,String text) {
         this.id = id;
         this.responsible = responsible;
         this.status = status;
         this.dueDate = dueDate;
+        this.text=text;
     }
 
     public String getId() {
@@ -57,6 +59,12 @@ public class Task {
 
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
+    }
+    public String getText(){
+        return text;
+    }
+    public void setText(String text){
+        this.text=text;        
     }
 }
 
