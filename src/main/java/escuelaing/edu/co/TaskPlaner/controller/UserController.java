@@ -5,19 +5,30 @@
  */
 package escuelaing.edu.co.TaskPlaner.controller;
 
-import escuelaing.edu.co.TaskPlaner.model.User;
-import escuelaing.edu.co.TaskPlaner.services.UserService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import escuelaing.edu.co.TaskPlaner.model.User;
+import escuelaing.edu.co.TaskPlaner.services.UserService;
 /**
  *
  * @author Alejandro
  */
 @RestController
+@CrossOrigin
 @RequestMapping(value = "/Users")
 public class UserController {
     @Autowired
