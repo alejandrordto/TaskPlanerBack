@@ -19,41 +19,82 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService{
     
-    HashMap<String,User> usersMap = new HashMap<>();
+   List<User> users = new ArrayList<>();
 
     @Override
     public List<User> getUsersList() {
-        List<User> users; users = new ArrayList<User>(usersMap.values());
         return users;
     }
 
     @Override
     public User getUserById(String userId) {
-        User user = usersMap.get(userId);
+        User user = null;
+        for (User u : users){
+            if(u.getId().equals(userId)) user = u;
+        }
         return user;
     }
 
     @Override
-    public User createUser(String userId, String name, String email, String password) {
-        User user = new User(userId,name,email,password);
-        usersMap.put(userId,user);
-        return user;
+    public boolean createUser(User user) {
+        boolean add = true;
+         for(User u:users){
+            if(u.getId().equals(user.getId())) add = false;
+        }
+        if(add) users.add(user);
+        return add;
 
     }
 
     @Override
-    public User updateUser(String userId, String name, String email, String password) {
-        User user = getUserById(userId);
-        user.setId(userId);
-        user.setFullname(name);
-        user.setEmail(email);
-        user.setPassword(password);
-        usersMap.replace(user.getId(),user);
-        return user;
+    public void updateUser(User user) {
+        int i = 0;
+        int pos = 0;
+        boolean found = false;
+        for(User u:users){
+            if(u.getId().equals(user.getId())){
+                pos = i;
+                found = true;
+            }
+            i++;
+        }
+        if(found) {
+            users.set(pos, user);
+        }
     }
 
     @Override
     public void removeUser(String userId) {
-        usersMap.remove(userId);
+       int i = 0;
+        int pos = 0;
+        boolean found = false;
+        for(User u:users){
+            i++;
+            if(u.getId().equals(userId)){
+                pos = i;
+                found = true;
+            }
+        }
+        if(found) {
+            users.remove(pos);
+        }
+    }
+
+    @Override
+    public boolean authorizeUser(String id, String password) {
+        boolean authorize = false;
+        for(User u : users){
+            if(u.getId().equals(id) && u.getPassword().equals(password)) authorize=true;
+        }
+        return authorize;
+    }
+
+    @Override
+    public User findUserByUsernameAndPassword(String username, String password) {
+        User user = null;
+        for(User u : users){
+            if(u.getId().equals(username) && u.getPassword().equals(password)) user=u;
+        }
+        return user;
     }
 }

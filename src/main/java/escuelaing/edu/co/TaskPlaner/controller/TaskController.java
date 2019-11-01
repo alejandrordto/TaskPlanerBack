@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -23,73 +23,63 @@ import org.springframework.web.bind.annotation.RestController;
 import escuelaing.edu.co.TaskPlaner.model.Task;
 import escuelaing.edu.co.TaskPlaner.model.User;
 import escuelaing.edu.co.TaskPlaner.services.TaskService;
+import escuelaing.edu.co.TaskPlaner.services.UserService;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMethod;
 /**
  *
  * @author Alejandro Rodriguez
  */
+@Service
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/Task")
 public class TaskController {
     @Autowired
+    UserService userService;
+
+    @Autowired
     TaskService taskService;
 
-    @GetMapping("/Tasks")
-    public ResponseEntity<?> getTaskList(){
-        return new ResponseEntity<>(taskService.geTasksList(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{taskId}")
-    public ResponseEntity<?> getTaskById(@PathVariable(name = "taskId") String taskId){
+    @RequestMapping(path="/addtask", method = RequestMethod.PUT)
+    public ResponseEntity<?> addTask(@RequestBody Task task, String userId){
         try {
-            return new ResponseEntity<>(taskService.getTaskById(taskId),HttpStatus.OK);
-        } catch (Exception e) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, e);
-            return new ResponseEntity<>("Error task no encontrado",HttpStatus.NOT_FOUND);
-        }
-
-    }
-
-    @DeleteMapping("/{taskId}")
-    public ResponseEntity<?> deleteTaskById(@PathVariable(name = "taskId") String taskId){
-        try {
-            taskService.removeTask(taskId);
-            return new ResponseEntity<>("Task eliminado",HttpStatus.OK);
-        } catch (Exception e) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, e);
-            return new ResponseEntity<>("Error usuario no encontrado",HttpStatus.NOT_FOUND);
-        }
-
-    }
-
-    @GetMapping ("/{userId}")
-    public ResponseEntity<?> getTaskByUserId(@PathVariable(name = "userId") String userId){
-        try {
-            taskService.getTasksByUserId(userId);
-            return new ResponseEntity<>(taskService.getTasksByUserId(userId),HttpStatus.OK);
-        } catch (Exception e) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, e);
-            return new ResponseEntity<>("Error usuario no encontrado",HttpStatus.NOT_FOUND);
-        }
-
-    }
-
-    @PostMapping
-    public ResponseEntity<?> updateTask(@RequestBody Task task) {
-        try {
-            return new ResponseEntity<>(taskService.updateTask(task.getId(),task.getResponsible(),task.getStatus(),task.getDueDate(),task.getText()), HttpStatus.ACCEPTED);
-        } catch (Exception ex) {
-
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+            taskService.assignedTaskToUser(task,userId);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (NumberFormatException ex){
+            Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("An error has ocurred",HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PutMapping
-    public ResponseEntity<?> assignedTaskToUser(@PathVariable(name = "taskId") String taskId,@RequestBody User user){
+    @RequestMapping(path="/gettasks", method = RequestMethod.GET)
+    public ResponseEntity<?> getTasks(String userid){
         try {
-            return new ResponseEntity<>(taskService.assignedTaskToUser(taskId,user), HttpStatus.ACCEPTED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(taskService.getTasksByUserId(userid), HttpStatus.ACCEPTED);
+        } catch (NumberFormatException ex){
+            Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("An error has ocurred",HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(path="/updatetask", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateTasks(@RequestBody Task task){
+        taskService.updateTask(task);
+        return getResponseEntity();
+    }
+
+    private ResponseEntity<?> getResponseEntity() {
+        try {
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (NumberFormatException ex){
+            Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("An error has ocurred",HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path="/updateuser", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateTasks(@RequestBody User user){
+        userService.updateUser(user);
+        return getResponseEntity();
     }
 }

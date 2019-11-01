@@ -21,9 +21,9 @@ public interface TaskService {
 
     public List<Task> getTasksByUserId(String userId);
 
-    public Task assignedTaskToUser(String taskId, User user);
+    public void assignedTaskToUser(Task task, String userId);
 
     public void removeTask(String taskId);
 
-    public Task updateTask(String id, User responsible, String status, Date dueDate, String text);
+    public void updateTask(Task task);
 }

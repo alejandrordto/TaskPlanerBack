@@ -7,10 +7,12 @@ package escuelaing.edu.co.TaskPlaner.services.impl;
 import escuelaing.edu.co.TaskPlaner.model.Task;
 import escuelaing.edu.co.TaskPlaner.model.User;
 import escuelaing.edu.co.TaskPlaner.services.TaskService;
+import escuelaing.edu.co.TaskPlaner.services.UserService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 /**
  *
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TaskUserImpl implements TaskService{
+     @Autowired
+    UserService userService;
     HashMap <String, Task> taskMap = new HashMap<>();
 
     @Override
@@ -45,16 +49,8 @@ public class TaskUserImpl implements TaskService{
     }
 
     @Override
-    public Task assignedTaskToUser(String taskId, User user) {
-        Task taskNewAssigned = null;
-        List<Task> task = geTasksList();
-        for (int i=0; i< task.size();i++){
-            if(task.get(i).getId().equals(taskId)){
-                task.get(i).setResponsible(user);
-                taskNewAssigned = task.get(i);
-            }
-        }
-        return taskNewAssigned;
+    public void assignedTaskToUser(Task task, String userId) {
+        userService.getUserById(userId).addTask(task);
     }
 
     @Override
@@ -63,14 +59,19 @@ public class TaskUserImpl implements TaskService{
     }
 
     @Override
-    public Task updateTask(String id, User responsible, String status, Date dueDate, String text) {
-        Task task = getTaskById(id);
-        task.setId(id);
-        task.setResponsible(responsible);
-        task.setStatus(status);
-        task.setDueDate(dueDate);
-        task.setText(text);
-        taskMap.replace(task.getId(),task);
-        return task;
+    public void updateTask(Task task) {
+       for(User u:userService.getUsersList()){
+            int i = 0;
+            int pos = 0;
+            boolean found = false;
+            for(Task t:u.getTaskList()){
+                if(t.getId().equals(task.getId())){
+                    pos = i;
+                    found = true;
+                }
+                i++;
+            }
+            if(found) u.getTaskList().set(pos,task);
+        }
     }
 }

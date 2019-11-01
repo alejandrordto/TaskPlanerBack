@@ -18,9 +18,13 @@ public interface UserService {
 
     public User getUserById(String userId);
 
-    public User createUser(String userId, String name, String email, String password);
+    public boolean createUser(User user);
 
-    public User updateUser(String userId, String name, String email, String password);
+    public void updateUser(User user);
 
     public void removeUser(String userId);
+    
+     boolean authorizeUser(String id, String password);
+     
+    User findUserByUsernameAndPassword(String username, String password);
 }
